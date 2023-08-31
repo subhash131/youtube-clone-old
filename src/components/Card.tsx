@@ -15,9 +15,14 @@ const Card = ({ videoUrl, name, owner, views, postedDate }: Props) => {
 	return (
 		<div className={`${isNavBarOpen ? "w-96" : "w-80"} cursor-pointer`}>
 			<video
-				autoPlay
 				muted
 				className='rounded-md hover:rounded-none hover:scale-[1.01] transition-all ease-in-out'
+				onMouseOver={(e: any) => {
+					e.target.play()
+				}}
+				onMouseOut={(e: any) => {
+					e.target.pause()
+				}}
 			>
 				<source src={videoUrl} /> font-roboto
 			</video>

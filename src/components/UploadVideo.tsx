@@ -8,10 +8,6 @@ const UploadVideo = () => {
 	const { isUploadVideoSelected, setIsUploadVideoSelected, video, setVideo } =
 		useContext(AppContext)
 	const fileRef = useRef<HTMLInputElement>(null)
-	const handleFileUpload = () => {
-		setVideo(fileRef.current?.files?.[0])
-		console.log(video?.name)
-	}
 
 	return (
 		<>
@@ -28,6 +24,7 @@ const UploadVideo = () => {
 						onClick={() => {
 							setIsUploadVideoSelected(false)
 							setVideo(undefined)
+							fileRef.current!.value = ""
 						}}
 						className='cursor-pointer'
 					/>
@@ -42,23 +39,25 @@ const UploadVideo = () => {
 								accept='video/*'
 								className='opacity-0 bg-red-50 absolute w-full h-full top-0 left-0 bottom-0 right-0 cursor-pointer'
 								ref={fileRef}
-								onChange={handleFileUpload}
+								onChange={(e) => {
+									setVideo(e.target?.files![0])
+								}}
 							/>
 						</div>
 						<div className='text-center'>
-							{video ? (
+							{video && (
 								<label className='text-base block'>
 									{video.name}
 								</label>
-							) : (
-								<label className='text-base'>
-									Drag and drop video files to upload <br />
-									<span className='text-sm text-[#959594]'>
-										Your videos will be private until you
-										publish them.
-									</span>
-								</label>
 							)}
+
+							<label className='text-base'>
+								Drag and drop video files to upload <br />
+								<span className='text-sm text-[#959594]'>
+									Your videos will be private until you
+									publish them.
+								</span>
+							</label>
 						</div>
 						<div className=''>
 							<label
@@ -70,7 +69,7 @@ const UploadVideo = () => {
 									}
 								}}
 							>
-								{video ? "UPLOAD FILES" : "SELECT FILES"}
+								{video ? "UPLOAD FILE" : "SELECT FILE"}
 							</label>
 						</div>
 					</div>

@@ -37,7 +37,7 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 	const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false)
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true)
 	const [isUploadVideoSelected, setIsUploadVideoSelected] =
-		useState<boolean>(true)
+		useState<boolean>(false)
 	const [isCreateSelected, setIsCreateSelected] = useState<boolean>(false)
 
 	return (
