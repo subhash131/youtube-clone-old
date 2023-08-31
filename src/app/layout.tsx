@@ -1,4 +1,3 @@
-"use client"
 import "./globals.css"
 import type { Metadata } from "next"
 import React from "react"
@@ -7,6 +6,10 @@ import AppContextProvider from "@/providers"
 import { Navbar } from "@/components/Navbar"
 
 import SideBar from "@/components/sidebar/SideBar"
+import FloatingSettings from "@/components/FloatingSettings"
+import CreateCard from "@/components/CreateCard"
+import AppContext from "@/providers/AppContext"
+import UploadVideo from "@/components/UploadVideo"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,13 +26,16 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body className={inter.className}>
-				<AppContextProvider>
+				<AppContext>
 					<div>
 						<Navbar />
 						<SideBar />
+						<FloatingSettings />
+						<CreateCard />
+						<UploadVideo />
 					</div>
 					<div>{children}</div>
-				</AppContextProvider>
+				</AppContext>
 			</body>
 		</html>
 	)

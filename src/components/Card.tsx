@@ -10,9 +10,10 @@ type Props = {
 }
 
 const Card = ({ videoUrl, name, owner, views, postedDate }: Props) => {
+	if (!AppContext) return null
 	const { isNavBarOpen } = React.useContext(AppContext)
 	return (
-		<div className={`${isNavBarOpen ? "w-96" : "w-80"} cursor-pointer `}>
+		<div className={`${isNavBarOpen ? "w-96" : "w-80"} cursor-pointer`}>
 			<video
 				autoPlay
 				muted
@@ -28,7 +29,7 @@ const Card = ({ videoUrl, name, owner, views, postedDate }: Props) => {
 					height='30'
 				></img>
 				<div className=''>
-					<p className='text-lg font-medium'>
+					<p className='text-base font-medium'>
 						Lorem ipsum dolor sit amet consectetur, adipisicing
 						elit.
 					</p>
