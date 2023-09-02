@@ -3,10 +3,17 @@ import React, { useEffect, useState } from "react"
 
 import Card from "@/components/Card"
 import { AppContext } from "@/providers"
-import FloatingSettings from "@/components/FloatingSettings"
+
+type Video = {
+	videoUrl: string
+	address: string
+	title: string
+	likes: string
+	createdAt: string
+}
 
 export default function Home() {
-	const [allVideos, setAllVideos] = useState<any>([])
+	const [allVideos, setAllVideos] = useState<Video[]>([])
 	const {
 		isNavBarOpen,
 		isCreateSelected,
@@ -16,9 +23,9 @@ export default function Home() {
 		getAllVideos,
 	} = React.useContext(AppContext)
 	useEffect(() => {
-		;(async () => {
+		(async () => {
 			const data = await getAllVideos()
-			setAllVideos(data)
+			setAllVideos(data as Video[])
 		})()
 	}, [])
 

@@ -1,7 +1,7 @@
 import { AppContext } from "@/providers"
 import React, { useContext } from "react"
 
-const Overlay = ({ display }: { display: Boolean }) => {
+const Overlay = ({ display }: { display: boolean }) => {
 	const { setIsUploadVideoSelected } = useContext(AppContext)
 	return (
 		<div

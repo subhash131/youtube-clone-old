@@ -2,7 +2,6 @@ import "./globals.css"
 import type { Metadata } from "next"
 import React from "react"
 import { Inter } from "next/font/google"
-import AppContextProvider from "@/providers"
 import { Navbar } from "@/components/Navbar"
 
 import SideBar from "@/components/sidebar/SideBar"

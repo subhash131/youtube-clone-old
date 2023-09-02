@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getContract } from "../helpers"
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest) => {
 	const reqBody = await req.json()
 	const contract = await getContract()
 	try {

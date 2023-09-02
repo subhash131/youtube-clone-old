@@ -1,5 +1,5 @@
 "use client"
-import React, { Dispatch, PropsWithChildren, useState, useEffect } from "react"
+import React, { Dispatch, PropsWithChildren, useState } from "react"
 import { MetaMaskWallet } from "@thirdweb-dev/wallets"
 import { ThirdwebSDK } from "@thirdweb-dev/sdk"
 import toast from "react-hot-toast"
@@ -18,9 +18,9 @@ type AppContextType = {
 	isUploadVideoSelected: boolean
 	setIsUploadVideoSelected: Dispatch<React.SetStateAction<boolean>>
 	wallet: MetaMaskWallet | undefined
-	updloadVideo: (video: File) => any | undefined
-	signIn: () => {}
-	getAllVideos: () => {}
+	updloadVideo: (video: File) => unknown
+	signIn: () => Promise<void>
+	getAllVideos: () => Promise<void>
 }
 
 export const AppContext = React.createContext<AppContextType>({
@@ -43,9 +43,6 @@ export const AppContext = React.createContext<AppContextType>({
 const AppContextProvider = ({ children }: PropsWithChildren) => {
 	const [sdk, setSdk] = useState<ThirdwebSDK | undefined>(undefined)
 	const wallet = new MetaMaskWallet({})
-	const [connectedWallet, setConnectedWallet] = useState<string | undefined>(
-		undefined
-	)
 
 	const [isNavBarOpen, setIsNavBarOpen] = useState<boolean>(true)
 	const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false)
@@ -59,7 +56,6 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 		const signer = await wallet.getSigner()
 		setSdk(ThirdwebSDK.fromSigner(signer, "mumbai", { clientId }))
 		if (await wallet.getAddress()) {
-			setConnectedWallet(await wallet.getAddress())
 			setIsLoggedIn(true)
 		}
 	}
@@ -120,9 +116,10 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 	}
 	const getAllVideos = async () => {
 		try {
-			const data = await fetch("http://localhost:3000/api/getAllVideos")
+			const baseUrl = window.location.origin
+			const url = baseUrl + "/api/getAllVideos"
+			const data = await fetch(url)
 			const jsonData = await data.json()
-			console.log(jsonData.data)
 			return jsonData.data
 		} catch (e) {
 			console.log(e)

@@ -13,10 +13,10 @@ export const GET = async () => {
 
 	try {
 		const resp = await contract.call("getAllVideos", [])
-		for (var i = 0; i < resp.length; i++) {
-			var uploadTime = new Date(resp[i].timeStamp * 1000)
-			var createdAt = ""
-			const diff = today.getTime() - uploadTime.getTime()
+		for (let i = 0; i < resp.length; i++) {
+			let createdAt = ""
+			const diff =
+				today.getTime() - new Date(resp[i].timeStamp * 1000).getTime()
 			const diffYears = Math.ceil(diff / year)
 			const diffDays = Math.ceil(diff / day)
 			const diffHours = Math.ceil(diff / hour)
