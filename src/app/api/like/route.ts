@@ -1,5 +1,5 @@
-import { getContract } from "../../../constants"
 import { NextRequest, NextResponse } from "next/server"
+import { getContract } from "../helpers"
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
 	const reqBody = await req.json()
