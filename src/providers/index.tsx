@@ -1,5 +1,10 @@
 "use client"
-import React, { Dispatch, PropsWithChildren, useState } from "react"
+import React, { Dispatch, PropsWithChildren, useState, useEffect } from "react"
+import { MetaMaskWallet } from "@thirdweb-dev/wallets"
+import { ThirdwebSDK } from "@thirdweb-dev/sdk"
+import toast from "react-hot-toast"
+import { contractAddress, clientId } from "@/constants"
+import { ThirdwebStorage } from "@thirdweb-dev/storage"
 
 type AppContextType = {
 	isNavBarOpen: boolean
@@ -12,8 +17,10 @@ type AppContextType = {
 	setIsCreateSelected: Dispatch<React.SetStateAction<boolean>>
 	isUploadVideoSelected: boolean
 	setIsUploadVideoSelected: Dispatch<React.SetStateAction<boolean>>
-	video: File | undefined
-	setVideo: Dispatch<React.SetStateAction<File | undefined>>
+	wallet: MetaMaskWallet | undefined
+	updloadVideo: (video: File) => any | undefined
+	signIn: () => {}
+	getAllVideos: () => {}
 }
 
 export const AppContext = React.createContext<AppContextType>({
@@ -27,26 +34,110 @@ export const AppContext = React.createContext<AppContextType>({
 	setIsCreateSelected: () => {},
 	isUploadVideoSelected: false,
 	setIsUploadVideoSelected: () => {},
-	video: undefined,
-	setVideo: () => {},
+	wallet: undefined,
+	updloadVideo: () => {},
+	signIn: () => Promise<void>,
+	getAllVideos: () => Promise<void>,
 })
 
 const AppContextProvider = ({ children }: PropsWithChildren) => {
-	const [video, setVideo] = useState<File>()
+	const [sdk, setSdk] = useState<ThirdwebSDK | undefined>(undefined)
+	const wallet = new MetaMaskWallet({})
+	const [connectedWallet, setConnectedWallet] = useState<string | undefined>(
+		undefined
+	)
+
 	const [isNavBarOpen, setIsNavBarOpen] = useState<boolean>(true)
 	const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false)
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true)
+	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 	const [isUploadVideoSelected, setIsUploadVideoSelected] =
 		useState<boolean>(false)
 	const [isCreateSelected, setIsCreateSelected] = useState<boolean>(false)
 
+	const signIn = async (): Promise<void> => {
+		await wallet.connect()
+		const signer = await wallet.getSigner()
+		setSdk(ThirdwebSDK.fromSigner(signer, "mumbai", { clientId }))
+		if (await wallet.getAddress()) {
+			setConnectedWallet(await wallet.getAddress())
+			setIsLoggedIn(true)
+		}
+	}
+	const getContract = async () => {
+		const contract = await sdk?.getContract(contractAddress)
+		return contract
+	}
+
+	const uploadToIpfs = async (
+		file: File
+	): Promise<{ publicUrl: string; ipfsUrl: string } | undefined> => {
+		const storage = new ThirdwebStorage({
+			clientId,
+		})
+		try {
+			const ipfsUrl = await storage.upload(file)
+			console.log("Uploaded to IPFS:", {
+				publicUrl: storage?.resolveScheme(ipfsUrl),
+				ipfsUrl,
+			})
+			return {
+				publicUrl: storage?.resolveScheme(ipfsUrl),
+				ipfsUrl,
+			}
+		} catch (e) {
+			console.log("Error ::", e)
+		}
+	}
+
+	const updloadVideo = async (video: File) => {
+		const ipfsDetails = await uploadToIpfs(video)
+		if (ipfsDetails) {
+			const { publicUrl } = ipfsDetails
+			const contract = await getContract()
+			const address = await wallet.getAddress()
+
+			if (!address) {
+				try {
+					const address = await wallet.connect()
+					if (address) {
+						toast.success("Wallet Connected")
+					}
+				} catch {
+					toast.error("Failed to connect wallet")
+				}
+			}
+			try {
+				const data = await contract?.call("uploadVideo", [publicUrl])
+				if (data) {
+					toast.success("Video Uploaded")
+				}
+			} catch (error) {
+				toast.error("Failed to upload video, Try again")
+			}
+		} else {
+			toast.error("Failed to upload video, Try again")
+		}
+	}
+	const getAllVideos = async () => {
+		try {
+			const data = await fetch("http://localhost:3000/api/getAllVideos")
+			const jsonData = await data.json()
+			console.log(jsonData.data)
+			return jsonData.data
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
-				video,
-				setVideo,
+				wallet,
+				signIn,
 				isLoggedIn,
+				getAllVideos,
 				isNavBarOpen,
+				updloadVideo,
 				setIsLoggedIn,
 				isSettingsOpen,
 				setIsNavBarOpen,

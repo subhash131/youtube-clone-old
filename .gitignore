@@ -35,4 +35,8 @@ yarn-error.log*
 next-env.d.ts
 
 #contracts
-/contract
+/contract/node_modules
+/contract/.gitignore
+/contract/cache
+/contract/artifacts
+/contract/package-lock.json

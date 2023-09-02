@@ -1,18 +1,27 @@
 "use client"
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 import Card from "@/components/Card"
 import { AppContext } from "@/providers"
 import FloatingSettings from "@/components/FloatingSettings"
 
 export default function Home() {
+	const [allVideos, setAllVideos] = useState<any>([])
 	const {
 		isNavBarOpen,
 		isCreateSelected,
 		isSettingsOpen,
 		setIsCreateSelected,
 		setIsSettingsOpen,
+		getAllVideos,
 	} = React.useContext(AppContext)
+	useEffect(() => {
+		;(async () => {
+			const data = await getAllVideos()
+			setAllVideos(data)
+		})()
+	}, [])
+
 	return (
 		<div
 			onClick={() => {
@@ -27,40 +36,28 @@ export default function Home() {
 					} p-2`}
 				>
 					<div
-						className={`grid ${
+						className={`grid pb-5 ${
 							isNavBarOpen
-								? "grid-cols-[repeat(auto-fill,minmax(24rem,1fr))]"
-								: "grid-cols-[repeat(auto-fill,minmax(20rem,1fr))]"
-						}  gap-6`}
+								? "grid-cols-[repeat(auto-fill,minmax(20rem,1fr))]"
+								: "grid-cols-[repeat(auto-fill,minmax(18rem,1fr))]"
+						}  gap-6 overflow-hidden`}
 					>
-						<Card
-							videoUrl='https://player.vimeo.com/external/360054810.sd.mp4?s=2a5f419725b1bef8017100b0588d9467d8530daa&profile_id=164&oauth2_token_id=57447761'
-							owner=''
-							name=''
-							views=''
-							postedDate=''
-						/>
-						<Card
-							videoUrl='https://player.vimeo.com/external/360054810.sd.mp4?s=2a5f419725b1bef8017100b0588d9467d8530daa&profile_id=164&oauth2_token_id=57447761'
-							owner=''
-							name=''
-							views=''
-							postedDate=''
-						/>
-						<Card
-							videoUrl='https://player.vimeo.com/external/360054810.sd.mp4?s=2a5f419725b1bef8017100b0588d9467d8530daa&profile_id=164&oauth2_token_id=57447761'
-							owner=''
-							name=''
-							views=''
-							postedDate=''
-						/>
-						<Card
-							videoUrl='https://player.vimeo.com/external/360054810.sd.mp4?s=2a5f419725b1bef8017100b0588d9467d8530daa&profile_id=164&oauth2_token_id=57447761'
-							owner=''
-							name=''
-							views=''
-							postedDate=''
-						/>
+						{allVideos ? (
+							[...allVideos].map((video, index) => {
+								return (
+									<Card
+										videoUrl={video.videoUrl}
+										owner={video.address}
+										title={video.title}
+										likes={video.likes}
+										postedDate={video.createdAt}
+										key={index}
+									/>
+								)
+							})
+						) : (
+							<>loading...</>
+						)}
 					</div>
 				</div>
 			</div>

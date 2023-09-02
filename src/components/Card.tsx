@@ -3,20 +3,22 @@ import React from "react"
 
 type Props = {
 	videoUrl: string
-	name: string
+	title: string
 	owner: string
-	views: string
+	likes: string
 	postedDate: string
 }
 
-const Card = ({ videoUrl, name, owner, views, postedDate }: Props) => {
+const Card = ({ videoUrl, title, owner, likes, postedDate }: Props) => {
 	if (!AppContext) return null
 	const { isNavBarOpen } = React.useContext(AppContext)
 	return (
-		<div className={`${isNavBarOpen ? "w-96" : "w-80"} cursor-pointer`}>
+		<div className={`${isNavBarOpen ? "w-96" : "w-80"} cursor-pointer `}>
 			<video
 				muted
-				className='rounded-md hover:rounded-none hover:scale-[1.01] transition-all ease-in-out'
+				className={`rounded-md hover:rounded-none hover:scale-[1.01] transition-all ease-in-out object-cover ${
+					isNavBarOpen ? "w-96 h-56" : "w-80 h-44"
+				}`}
 				onMouseOver={(e: any) => {
 					e.target.play()
 				}}
@@ -34,13 +36,16 @@ const Card = ({ videoUrl, name, owner, views, postedDate }: Props) => {
 					height='30'
 				></img>
 				<div className=''>
-					<p className='text-base font-medium'>
-						Lorem ipsum dolor sit amet consectetur, adipisicing
-						elit.
-					</p>
-					<label className='text-sm'>Channel Name</label>
+					<p className='text-base font-medium'>{title}</p>
+					<label className='text-sm'>{`${owner.substring(
+						0,
+						5
+					)}....${owner.substring(
+						owner.length,
+						owner.length - 3
+					)}`}</label>
 					<div className='text-sm'>
-						<label>2M views &#x2022; 2 weeks ago</label>
+						<label>2M views &#x2022; {postedDate}</label>
 					</div>
 				</div>
 			</div>

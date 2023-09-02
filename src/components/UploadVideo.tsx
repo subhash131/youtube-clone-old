@@ -1,13 +1,15 @@
 "use client"
 import { AppContext } from "@/providers"
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { useContext, useRef, useState } from "react"
 import Overlay from "./Overlay"
 import { ArrowUpFromLine, X } from "lucide-react"
 
 const UploadVideo = () => {
-	const { isUploadVideoSelected, setIsUploadVideoSelected, video, setVideo } =
+	const [video, setVideo] = useState<File | undefined>(undefined)
+	const { isUploadVideoSelected, setIsUploadVideoSelected, updloadVideo } =
 		useContext(AppContext)
 	const fileRef = useRef<HTMLInputElement>(null)
+	const titleRef = useRef<HTMLInputElement>(null)
 
 	return (
 		<>
@@ -17,7 +19,6 @@ const UploadVideo = () => {
 					isUploadVideoSelected ? "" : "hidden"
 				}`}
 			>
-				{" "}
 				<div className='flex w-full font-medium  bg-[red*] h-16 p-4 justify-between border-b px-8'>
 					<label>Upload Videos</label>
 					<X
@@ -45,19 +46,31 @@ const UploadVideo = () => {
 							/>
 						</div>
 						<div className='text-center'>
-							{video && (
-								<label className='text-base block'>
-									{video.name}
+							{video ? (
+								<div className='flex flex-col gap-1'>
+									<label className='text-base inline-block'>
+										{video.name}
+									</label>
+									<input
+										type='text'
+										placeholder='title..'
+										className='border rounded-lg p-2'
+										ref={titleRef}
+									/>
+									<span className='text-sm text-[#959594]'>
+										Your videos will be private until you
+										publish them.
+									</span>
+								</div>
+							) : (
+								<label className='text-base'>
+									Drag and drop video files to upload <br />
+									<span className='text-sm text-[#959594]'>
+										Your videos will be private until you
+										publish them.
+									</span>
 								</label>
 							)}
-
-							<label className='text-base'>
-								Drag and drop video files to upload <br />
-								<span className='text-sm text-[#959594]'>
-									Your videos will be private until you
-									publish them.
-								</span>
-							</label>
 						</div>
 						<div className=''>
 							<label
@@ -65,7 +78,7 @@ const UploadVideo = () => {
 								className='cursor-pointer block px-6 py-2 w-44 text-white text-center bg-[#075FD5] font-medium rounded'
 								onClick={() => {
 									if (video) {
-										console.log(video)
+										updloadVideo(video)
 									}
 								}}
 							>

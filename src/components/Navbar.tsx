@@ -14,11 +14,13 @@ export function Navbar() {
 		setIsCreateSelected,
 		isCreateSelected,
 		isSettingsOpen,
+		wallet,
+		signIn,
 	} = React.useContext(AppContext)
 
 	return (
 		<div
-			className='w-full bg-white font-roboto fixed'
+			className='w-full bg-white font-roboto fixed z-[1000]'
 			onClick={() => {
 				if (isCreateSelected) setIsCreateSelected(false)
 				if (isSettingsOpen) setIsSettingsOpen(false)
@@ -63,7 +65,12 @@ export function Navbar() {
 							<div className='p-2 rounded-full hover:bg-[#F4F4F4] cursor-pointer'>
 								<NotificationSvg isSelected={false} />
 							</div>
-							<div className='p-2 rounded-full border cursor-pointer w-10 h-10'>
+							<div
+								className='p-2 rounded-full border cursor-pointer w-10 h-10'
+								onClick={() => {
+									wallet?.disconnect()
+								}}
+							>
 								<img
 									className='rounded-full object-cover w-6 h-6'
 									src='https://static.thenounproject.com/png/5800652-200.png'
@@ -82,7 +89,12 @@ export function Navbar() {
 							>
 								<MoreVertical size={24} strokeWidth={1} />
 							</div>
-							<div className='flex gap-2 rounded-3xl border py-2 px-3 w-28 cursor-pointer'>
+							<div
+								className='flex gap-2 rounded-3xl border py-2 px-3 w-28 cursor-pointer'
+								onClick={async () => {
+									signIn()
+								}}
+							>
 								<UserCircle2
 									size={24}
 									strokeWidth={1}

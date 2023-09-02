@@ -10,6 +10,7 @@ import FloatingSettings from "@/components/FloatingSettings"
 import CreateCard from "@/components/CreateCard"
 import AppContext from "@/providers/AppContext"
 import UploadVideo from "@/components/UploadVideo"
+import { Toaster } from "react-hot-toast"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,6 +29,7 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<AppContext>
 					<div>
+						<Toaster position='top-center' />
 						<Navbar />
 						<SideBar />
 						<FloatingSettings />
