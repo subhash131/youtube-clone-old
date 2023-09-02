@@ -25,7 +25,7 @@ export default function Home() {
 	useEffect(() => {
 		(async () => {
 			const data = await getAllVideos()
-			setAllVideos(data as Video[])
+			if (data != undefined) setAllVideos(data as Video[])
 		})()
 	}, [])
 
