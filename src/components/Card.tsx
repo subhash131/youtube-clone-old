@@ -9,7 +9,7 @@ type Props = {
 	postedDate: string
 }
 
-const Card = ({ videoUrl, title, owner, likes, postedDate }: Props) => {
+const Card = ({ videoUrl, title, owner, postedDate }: Props) => {
 	if (!AppContext) return null
 	const { isNavBarOpen } = React.useContext(AppContext)
 	return (
@@ -19,11 +19,11 @@ const Card = ({ videoUrl, title, owner, likes, postedDate }: Props) => {
 				className={`rounded-md hover:rounded-none hover:scale-[1.01] transition-all ease-in-out object-cover ${
 					isNavBarOpen ? "w-96 h-56" : "w-80 h-44"
 				}`}
-				onMouseOver={(e: any) => {
-					e.target.play()
+				onMouseOver={(e) => {
+					(e.target as HTMLVideoElement).play()
 				}}
-				onMouseOut={(e: any) => {
-					e.target.pause()
+				onMouseOut={(e) => {
+					(e.target as HTMLVideoElement).pause()
 				}}
 			>
 				<source src={videoUrl} /> font-roboto

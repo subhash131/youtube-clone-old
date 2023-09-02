@@ -1,13 +1,5 @@
 import React from "react"
-import {
-	BarChart,
-	Wallet,
-	Newspaper,
-	BellRing,
-	Paperclip,
-	Brush,
-	Wrench,
-} from "lucide-react"
+import { Newspaper, BellRing, Paperclip, Brush, Wrench } from "lucide-react"
 import HomeSvg from "@/assets/HomeSvg"
 import ShortsSvg from "@/assets/ShortsSvg"
 import SubscriptionSvg from "@/assets/Subscriptions"
