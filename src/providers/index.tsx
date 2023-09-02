@@ -36,8 +36,8 @@ export const AppContext = React.createContext<AppContextType>({
 	setIsUploadVideoSelected: () => {},
 	wallet: undefined,
 	updloadVideo: () => {},
-	signIn: () => Promise<void>,
-	getAllVideos: () => Promise<void>,
+	signIn: () => new Promise<void>(() => {}),
+	getAllVideos: () => new Promise<void>(() => {}),
 })
 
 const AppContextProvider = ({ children }: PropsWithChildren) => {
