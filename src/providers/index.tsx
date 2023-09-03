@@ -106,6 +106,7 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 				const data = await contract?.call("uploadVideo", [publicUrl])
 				if (data) {
 					toast.success("Video Uploaded")
+					setIsUploadVideoSelected(false)
 				}
 			} catch (error) {
 				toast.error("Failed to upload video, Try again")
@@ -116,8 +117,7 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 	}
 	const getAllVideos = async () => {
 		try {
-			const baseUrl = window.location.origin
-			const url = baseUrl + "/api/getAllVideos"
+			const url = window.location.origin + "/api/getAllVideos"
 			const data = await fetch(url)
 			const jsonData = await data.json()
 			return jsonData.data

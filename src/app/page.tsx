@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react"
 
 import Card from "@/components/Card"
 import { AppContext } from "@/providers"
-
 type Video = {
 	videoUrl: string
 	address: string
@@ -47,7 +46,7 @@ export default function Home() {
 							isNavBarOpen
 								? "grid-cols-[repeat(auto-fill,minmax(20rem,1fr))]"
 								: "grid-cols-[repeat(auto-fill,minmax(18rem,1fr))]"
-						}  gap-6 overflow-hidden`}
+						}  gap-8 overflow-hidden`}
 					>
 						{allVideos ? (
 							[...allVideos].map((video, index) => {

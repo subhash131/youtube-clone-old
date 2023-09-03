@@ -3,11 +3,14 @@ import { AppContext } from "@/providers"
 import React, { useContext, useRef, useState } from "react"
 import Overlay from "./Overlay"
 import { ArrowUpFromLine, X } from "lucide-react"
+import toast from "react-hot-toast"
 
 const UploadVideo = () => {
 	const [video, setVideo] = useState<File | undefined>(undefined)
 	const { isUploadVideoSelected, setIsUploadVideoSelected, updloadVideo } =
 		useContext(AppContext)
+	const [isTransactionLoading, setIsTransactionLoading] =
+		useState<boolean>(false)
 	const fileRef = useRef<HTMLInputElement>(null)
 	const titleRef = useRef<HTMLInputElement>(null)
 
@@ -76,13 +79,24 @@ const UploadVideo = () => {
 							<label
 								htmlFor={video ? "" : "select-files"}
 								className='cursor-pointer block px-6 py-2 w-44 text-white text-center bg-[#075FD5] font-medium rounded'
-								onClick={() => {
+								onClick={async () => {
+									if (isTransactionLoading) {
+										toast.error(
+											"Transaction is loading, please Wait..."
+										)
+									}
 									if (video) {
-										updloadVideo(video)
+										setIsTransactionLoading(true)
+										await updloadVideo(video)
+										setIsTransactionLoading(false)
 									}
 								}}
 							>
-								{video ? "UPLOAD FILE" : "SELECT FILE"}
+								{isTransactionLoading
+									? "Loading"
+									: video
+									? "UPLOAD FILE"
+									: "SELECT FILE"}
 							</label>
 						</div>
 					</div>

@@ -4,7 +4,7 @@ import React from "react"
 import { Inter } from "next/font/google"
 import { Navbar } from "@/components/Navbar"
 
-import SideBar from "@/components/sidebar/SideBar"
+import SideBar from "@/components/sidebar"
 import FloatingSettings from "@/components/FloatingSettings"
 import CreateCard from "@/components/CreateCard"
 import AppContext from "@/providers/AppContext"
