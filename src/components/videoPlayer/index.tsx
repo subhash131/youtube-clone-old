@@ -157,7 +157,7 @@ const VideoPlayer = () => {
 
 	return (
 		<div
-			className={` overflow-hidden  box-border w-[90%] max-w-[1000px] flex justify-center m-auto group relative ease-in-out bg-black ${
+			className={`overflow-hidden  box-border w-[90%] max-w-[1000px] flex justify-center m-auto group relative ease-in-out bg-black ${
 				isTheraterMode ? theraterMode : ""
 			}`}
 			id='vid'

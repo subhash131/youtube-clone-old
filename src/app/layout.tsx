@@ -3,8 +3,6 @@ import type { Metadata } from "next"
 import React from "react"
 import { Inter } from "next/font/google"
 import { Navbar } from "@/components/Navbar"
-
-import SideBar from "@/components/sidebar"
 import FloatingSettings from "@/components/FloatingSettings"
 import CreateCard from "@/components/CreateCard"
 import AppContext from "@/providers/AppContext"
@@ -30,7 +28,6 @@ export default function RootLayout({
 					<div>
 						<Toaster position='top-center' />
 						<Navbar />
-						<SideBar />
 						<FloatingSettings />
 						<CreateCard />
 						<UploadVideo />
