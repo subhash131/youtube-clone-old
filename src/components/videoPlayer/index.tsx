@@ -1,3 +1,4 @@
+"use client"
 import CaptionsSvg from "@/assets/CaptionsSvg"
 import { FullScreenCloseSvg, FullScreenOpenSvg } from "@/assets/FullScreeSvg"
 import MiniPlayerSvg from "@/assets/MiniPlayerSvg"
@@ -6,10 +7,12 @@ import PlaySvg from "@/assets/PlaySvg"
 import SkipNextSvg from "@/assets/SkipNextSvg"
 import { TheaterTallSvg, TheaterWideSvg } from "@/assets/TheaterSvg"
 import VolumeSvg from "@/assets/VolumeSvg"
+import { Video } from "@/typescript.types/video"
 import React, { useEffect, useRef, useState } from "react"
+import VideoDetails from "./VideoDetails"
 
-const VideoPlayer = () => {
-	const theraterMode = "max-w-[initial] w-full max-h-[90vh] "
+const VideoPlayer = ({ videoUrl, address, title, likes, createdAt }: Video) => {
+	const theraterMode = "max-w-[initial] w-full max-h-[90vh]"
 	// const miniPlayer = "max-w-[initial] w-full max-h-[80vh] "
 	const [isFullScreen, setisFullScreen] = useState<boolean>(false)
 	const [isVideoPaused, setIsVideoPaused] = useState<boolean>(true)
@@ -20,6 +23,7 @@ const VideoPlayer = () => {
 	const [currentTime, setCurrentTime] = useState<string>("0:00")
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const timeLineRef = useRef<HTMLDivElement>(null)
+	const containerRef = useRef<HTMLDivElement>(null)
 	useEffect(() => {
 		document.addEventListener("keydown", (e) => {
 			const activeTag = document.activeElement?.tagName.toLowerCase()
@@ -42,9 +46,7 @@ const VideoPlayer = () => {
 					toggleMiniPlayer()
 					break
 				case "m":
-					setVolumeLevel((volumeLevel) =>
-						volumeLevel == 0 ? 0.6 : 0
-					)
+					toggleVolume()
 					break
 				case "arrowleft":
 				case "j":
@@ -75,7 +77,7 @@ const VideoPlayer = () => {
 		}
 		if (!document.fullscreenElement) {
 			setisFullScreen(true)
-			document.getElementById("vid")!.requestFullscreen()
+			containerRef.current!.requestFullscreen()
 		} else {
 			if (isTheraterMode) setisTheraterMode(false)
 			setisFullScreen(false)
@@ -95,6 +97,7 @@ const VideoPlayer = () => {
 		}
 	}
 	const toggleTheaterMode = () => {
+		// console.log("Theater")
 		if (document.pictureInPictureElement) {
 			document.exitPictureInPicture()
 			setisMiniPlayer(false)
@@ -154,190 +157,208 @@ const VideoPlayer = () => {
 			}
 		}
 	}
+	const toggleVolume = () => {
+		setVolumeLevel((volLevel) => (volLevel == 0 ? 0.6 : 0))
+		if (!videoRef.current?.volume) videoRef.current!.volume = 0.6
+		else videoRef.current!.volume = 0
+	}
 
 	return (
-		<div
-			className={`overflow-hidden  box-border w-[90%] max-w-[1000px] flex justify-center m-auto group relative ease-in-out bg-black ${
-				isTheraterMode ? theraterMode : ""
-			}`}
-			id='vid'
-		>
+		<>
 			<div
-				className={`controls-container absolute bottom-0 left-0 right-0 text-white z-10  transition-opacity group-hover:opacity-100 ${
-					isVideoPaused ? "opacity-100" : "opacity-0"
-				}  `}
+				className={`overflow-hidden m-auto box-border w-full  flex justify-center items-center group relative ease-in-out bg-[black] ${
+					isTheraterMode ? theraterMode : ""
+				}`}
+				ref={containerRef}
 			>
 				<div
-					className='timeline-container h-[7px] mx-2 cursor-pointer flex items-center'
-					onMouseMove={updateTimeLine}
-					ref={timeLineRef}
-					onClick={(e) => {
-						const rect = (
-							e.target as HTMLDivElement
-						).getBoundingClientRect()
+					className={`controls-container absolute bottom-0 left-0 right-0 text-white z-10  transition-opacity group-hover:opacity-100 ${
+						isVideoPaused ? "opacity-100" : "opacity-0"
+					}  `}
+				>
+					<div
+						className='timeline-container h-[7px] mx-2 cursor-pointer flex items-center'
+						onMouseMove={updateTimeLine}
+						ref={timeLineRef}
+						onClick={(e) => {
+							const rect = (
+								e.target as HTMLDivElement
+							).getBoundingClientRect()
+							const percent =
+								Math.min(
+									Math.max(0, e.clientX - rect.x),
+									rect.width
+								) / rect.width
+							;(e.target as HTMLDivElement).style.setProperty(
+								"--progress-position",
+								percent.toString()
+							)
+							videoRef.current!.currentTime =
+								percent * videoRef.current!.duration
+							if (!videoRef.current!.paused) {
+								videoRef.current?.play()
+							}
+						}}
+					>
+						<div className='timeline bg-[rgba(100,100,100,.5)] h-[3px] w-full relative'></div>
+					</div>
+					<div className='flex p-1 items-center before:content-[""] before:absolute before:bottom-0 before:bg-gradient-to-t before:from-[rgba(0,0,0,.75),transparent] before:z-[-1] before:aspect-[6/1] before:w-full before:h-40 before:left-0 justify-between '>
+						<div className='z-20 flex gap-2'>
+							<button
+								className='p-0 bg-none mb-2 text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
+								onClick={(e) => {
+									e.stopPropagation()
+									togglePlay()
+								}}
+							>
+								{isVideoPaused ? <PauseSvg /> : <PlaySvg />}
+							</button>
+							<button
+								className='p-0 bg-none text-inherit h-[30px] w-[30px] cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
+								onClick={(e) => {
+									e.stopPropagation()
+									togglePlay()
+								}}
+							>
+								<SkipNextSvg />
+							</button>
+							<div className='flex items-center volume mb-2'>
+								<button
+									className='bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-all ease-in-out delay-300'
+									onClick={(e) => {
+										e.stopPropagation()
+										toggleVolume()
+									}}
+								>
+									<VolumeSvg
+										type={`${
+											volumeLevel == 0
+												? "muted"
+												: volumeLevel < 0.5
+												? "low"
+												: "high"
+										}`}
+										className='transition-all ease-in-out delay-1000'
+									/>
+								</button>
+								<input
+									type='range'
+									step='any'
+									value={volumeLevel}
+									max='1'
+									min='0'
+									className='bg-[white]  h-[2px] slider appearance-none transition ease-in-out '
+									onChange={(e) => {
+										setVolumeLevel(Number(e.target.value))
+										videoRef.current!.volume = Number(
+											e.target?.value
+										)
+									}}
+								/>
+							</div>
+							<div className='duration-container flex gap-1 items-center mb-2'>
+								<div className='current-time text-sm'>
+									{currentTime}
+								</div>
+								/
+								<div className='total-time text-sm'>
+									{videoDuration}
+								</div>
+							</div>
+						</div>
+						<div className='z-20 flex gap-2 mb-2'>
+							<button className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '>
+								<CaptionsSvg />
+							</button>
+							<button
+								className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-sm opacity-80 hover:opacity-100 transition-opacity ease-in-out '
+								onClick={updateVideoSpeed}
+							>
+								{videoRef.current?.playbackRate || 1}x
+							</button>
+							<button
+								className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
+								onClick={(e) => {
+									e.stopPropagation()
+									toggleMiniPlayer()
+								}}
+							>
+								<MiniPlayerSvg />
+							</button>
+							<button
+								className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
+								onClick={(e) => {
+									e.stopPropagation()
+									toggleTheaterMode()
+								}}
+							>
+								{isTheraterMode ? (
+									<TheaterWideSvg />
+								) : (
+									<TheaterTallSvg />
+								)}
+							</button>
+							<button
+								className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
+								onClick={(e) => {
+									e.stopPropagation()
+									toggleFullScreen()
+								}}
+							>
+								{isFullScreen ? (
+									<FullScreenCloseSvg />
+								) : (
+									<FullScreenOpenSvg />
+								)}
+							</button>
+						</div>
+					</div>
+				</div>
+				<video
+					src={videoUrl}
+					className={`${isFullScreen ? "" : "max-h-[80vh]"} w-full`}
+					ref={videoRef}
+					onClick={togglePlay}
+					onLoadedData={(e) => {
+						setVideoDuration(
+							formatDuration(
+								Number((e.target as HTMLVideoElement).duration)
+							)
+						)
+					}}
+					onPlay={(e) => {
+						setVideoDuration(
+							formatDuration(
+								Number((e.target as HTMLVideoElement).duration)
+							)
+						)
+					}}
+					onTimeUpdate={(e) => {
+						setCurrentTime(
+							formatDuration(
+								Number(
+									(e.target as HTMLVideoElement).currentTime
+								)
+							)
+						)
 						const percent =
-							Math.min(
-								Math.max(0, e.clientX - rect.x),
-								rect.width
-							) / rect.width
-						;(e.target as HTMLDivElement).style.setProperty(
+							(e.target as HTMLVideoElement).currentTime /
+							(e.target as HTMLVideoElement).duration
+
+						timeLineRef.current?.style.setProperty(
 							"--progress-position",
 							percent.toString()
 						)
-						videoRef.current!.currentTime =
-							percent * videoRef.current!.duration
-						if (!videoRef.current!.paused) {
-							videoRef.current?.play()
-						}
 					}}
-				>
-					<div className='timeline bg-[rgba(100,100,100,.5)] h-[3px] w-full relative'></div>
-				</div>
-				<div className='flex p-1 items-center before:content-[""] before:absolute before:bottom-0 before:bg-gradient-to-t before:from-[rgba(0,0,0,.75),transparent] before:z-[-1] before:aspect-[6/1] before:w-full before:h-40 before:left-0 justify-between '>
-					<div className='z-20 flex gap-2'>
-						<button
-							className='p-0 bg-none mb-2 text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
-							onClick={(e) => {
-								e.stopPropagation()
-								togglePlay()
-							}}
-						>
-							{isVideoPaused ? <PauseSvg /> : <PlaySvg />}
-						</button>
-						<button
-							className='p-0 bg-none text-inherit h-[30px] w-[30px] cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
-							onClick={(e) => {
-								e.stopPropagation()
-								togglePlay()
-							}}
-						>
-							<SkipNextSvg />
-						</button>
-						<div className='flex items-center volume mb-2'>
-							<button
-								className='bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-all ease-in-out delay-300'
-								onClick={(e) => {
-									e.stopPropagation()
-									setVolumeLevel(volumeLevel == 0 ? 0.6 : 0)
-								}}
-							>
-								<VolumeSvg
-									type={`${
-										volumeLevel == 0
-											? "muted"
-											: volumeLevel < 0.5
-											? "low"
-											: "high"
-									}`}
-									className='transition-all ease-in-out delay-1000'
-								/>
-							</button>
-							<input
-								type='range'
-								step='any'
-								value={volumeLevel}
-								max='1'
-								min='0'
-								className='bg-[white]  h-[2px] slider appearance-none transition ease-in-out '
-								onChange={(e) => {
-									setVolumeLevel(Number(e.target.value))
-								}}
-							/>
-						</div>
-						<div className='duration-container flex gap-1 items-center mb-2'>
-							<div className='current-time text-sm'>
-								{currentTime}
-							</div>
-							/
-							<div className='total-time text-sm'>
-								{videoDuration}
-							</div>
-						</div>
-					</div>
-					<div className='z-20 flex gap-2 mb-2'>
-						<button className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '>
-							<CaptionsSvg />
-						</button>
-						<button
-							className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-sm opacity-80 hover:opacity-100 transition-opacity ease-in-out '
-							onClick={updateVideoSpeed}
-						>
-							{videoRef.current?.playbackRate || 1}x
-						</button>
-						<button
-							className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
-							onClick={(e) => {
-								e.stopPropagation()
-								toggleMiniPlayer()
-							}}
-						>
-							<MiniPlayerSvg />
-						</button>
-						<button
-							className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
-							onClick={(e) => {
-								e.stopPropagation()
-								toggleTheaterMode()
-							}}
-						>
-							{isTheraterMode ? (
-								<TheaterWideSvg />
-							) : (
-								<TheaterTallSvg />
-							)}
-						</button>
-						<button
-							className='p-0 bg-none text-inherit h-[30px] w-[30px]  cursor-pointer border-none text-lg opacity-80 hover:opacity-100 transition-opacity ease-in-out '
-							onClick={(e) => {
-								e.stopPropagation()
-								toggleFullScreen()
-							}}
-						>
-							{isFullScreen ? (
-								<FullScreenCloseSvg />
-							) : (
-								<FullScreenOpenSvg />
-							)}
-						</button>
-					</div>
-				</div>
+				/>
 			</div>
-			<video
-				src='https://5811c52b850262280a6c20c6d3a9c0d9.ipfscdn.io/ipfs/bafybeiejvgm7ullt56qik7lw2fbgm7rrq3ykgcvk6kyxrx5kwrqmlctibq/cyclicing.mp4'
-				className='w-full'
-				ref={videoRef}
-				onClick={togglePlay}
-				onLoadedData={(e) => {
-					setVideoDuration(
-						formatDuration(
-							Number((e.target as HTMLVideoElement).duration)
-						)
-					)
-				}}
-				onPlay={(e) => {
-					setVideoDuration(
-						formatDuration(
-							Number((e.target as HTMLVideoElement).duration)
-						)
-					)
-				}}
-				onTimeUpdate={(e) => {
-					setCurrentTime(
-						formatDuration(
-							Number((e.target as HTMLVideoElement).currentTime)
-						)
-					)
-					const percent =
-						(e.target as HTMLVideoElement).currentTime /
-						(e.target as HTMLVideoElement).duration
-
-					timeLineRef.current?.style.setProperty(
-						"--progress-position",
-						percent.toString()
-					)
-				}}
+			<VideoDetails
+				address={address}
+				title={title}
+				likes={likes}
+				createdAt={createdAt}
 			/>
-		</div>
+		</>
 	)
 }
 

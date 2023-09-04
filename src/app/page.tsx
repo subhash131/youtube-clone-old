@@ -1,37 +1,34 @@
 "use client"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 
 import Card from "@/components/Card"
 import { AppContext } from "@/providers"
 import SideBar from "@/components/sidebar"
-type Video = {
-	videoUrl: string
-	address: string
-	title: string
-	likes: string
-	createdAt: string
-}
+import Link from "next/link"
+import { Video } from "@/typescript.types/video"
 
 export default function Home() {
-	const [allVideos, setAllVideos] = useState<Video[]>([])
 	const {
+		allVideos,
 		isNavBarOpen,
+		setIsNavBarOpen,
 		isCreateSelected,
 		isSettingsOpen,
 		setIsCreateSelected,
 		setIsSettingsOpen,
 		getAllVideos,
+		reload,
 	} = React.useContext(AppContext)
 	useEffect(() => {
-		(async () => {
-			const data = await getAllVideos()
-			if (data != undefined) setAllVideos(data as Video[])
+		setIsNavBarOpen(true)
+		;(async () => {
+			await getAllVideos()
 		})()
-	}, [])
+	}, [reload])
 
 	return (
 		<>
-			<SideBar />
+			<SideBar isVideoPlayer={false} />
 			<div
 				onClick={() => {
 					if (isCreateSelected) setIsCreateSelected(false)
@@ -54,14 +51,22 @@ export default function Home() {
 							{allVideos ? (
 								[...allVideos].map((video, index) => {
 									return (
-										<Card
-											videoUrl={video.videoUrl}
-											owner={video.address}
-											title={video.title}
-											likes={video.likes}
-											postedDate={video.createdAt}
+										<Link
 											key={index}
-										/>
+											href={{
+												pathname: `/${index}`,
+												query: video,
+											}}
+										>
+											<Card
+												videoUrl={video.videoUrl}
+												owner={video.address}
+												title={video.title}
+												likes={video.likes}
+												postedDate={video.createdAt}
+												key={index}
+											/>
+										</Link>
 									)
 								})
 							) : (

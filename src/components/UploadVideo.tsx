@@ -93,7 +93,7 @@ const UploadVideo = () => {
 								}}
 							>
 								{isTransactionLoading
-									? "Loading"
+									? "Loading..."
 									: video
 									? "UPLOAD FILE"
 									: "SELECT FILE"}

@@ -6,7 +6,7 @@ import SubscriptionSvg from "@/assets/Subscriptions"
 
 export function SidebarOpened() {
 	return (
-		<aside className='flex h-screen w-56 flex-col overflow-y-auto  bg-white px-5 py-8 fixed mt-12 ml-1'>
+		<aside className='flex h-screen w-56 flex-col overflow-y-auto  bg-white px-5 py-8 fixed mt-12'>
 			<div className=' flex flex-1 flex-col justify-between'>
 				<nav className='-mx-3 space-y-6 '>
 					<div className='space-y-3 '>

@@ -6,6 +6,14 @@ import toast from "react-hot-toast"
 import { contractAddress, clientId } from "@/constants"
 import { ThirdwebStorage } from "@thirdweb-dev/storage"
 
+type Video = {
+	videoUrl: string
+	address: string
+	title: string
+	likes: string
+	createdAt: string
+}
+
 type AppContextType = {
 	isNavBarOpen: boolean
 	setIsNavBarOpen: Dispatch<React.SetStateAction<boolean>>
@@ -21,6 +29,10 @@ type AppContextType = {
 	updloadVideo: (video: File) => unknown
 	signIn: () => Promise<void>
 	getAllVideos: () => Promise<void>
+	setAllVideos: Dispatch<React.SetStateAction<Video[]>>
+	allVideos: Video[]
+	reload: boolean
+	setReload: Dispatch<React.SetStateAction<boolean>>
 }
 
 export const AppContext = React.createContext<AppContextType>({
@@ -38,19 +50,24 @@ export const AppContext = React.createContext<AppContextType>({
 	updloadVideo: () => {},
 	signIn: () => new Promise<void>(() => {}),
 	getAllVideos: () => new Promise<void>(() => {}),
+	setAllVideos: () => {},
+	allVideos: [],
+	setReload: () => {},
+	reload: false,
 })
 
 const AppContextProvider = ({ children }: PropsWithChildren) => {
 	const [sdk, setSdk] = useState<ThirdwebSDK | undefined>(undefined)
 	const wallet = new MetaMaskWallet({})
 
-	const [isNavBarOpen, setIsNavBarOpen] = useState<boolean>(true)
+	const [isNavBarOpen, setIsNavBarOpen] = useState<boolean>(false)
 	const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false)
+	const [reload, setReload] = useState<boolean>(false)
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 	const [isUploadVideoSelected, setIsUploadVideoSelected] =
 		useState<boolean>(false)
 	const [isCreateSelected, setIsCreateSelected] = useState<boolean>(false)
-
+	const [allVideos, setAllVideos] = useState<Video[]>([])
 	const signIn = async (): Promise<void> => {
 		await wallet.connect()
 		const signer = await wallet.getSigner()
@@ -114,12 +131,15 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 		} else {
 			toast.error("Failed to upload video, Try again")
 		}
+		setReload((preVal) => !preVal)
+		setIsUploadVideoSelected(false)
 	}
 	const getAllVideos = async () => {
 		try {
 			const url = window.location.origin + "/api/getAllVideos"
 			const data = await fetch(url)
 			const jsonData = await data.json()
+			setAllVideos(jsonData.data)
 			return jsonData.data
 		} catch (e) {
 			console.log(e)
@@ -131,9 +151,13 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 			value={{
 				wallet,
 				signIn,
+				reload,
+				setReload,
+				allVideos,
 				isLoggedIn,
-				getAllVideos,
 				isNavBarOpen,
+				setAllVideos,
+				getAllVideos,
 				updloadVideo,
 				setIsLoggedIn,
 				isSettingsOpen,

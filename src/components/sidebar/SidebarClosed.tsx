@@ -8,7 +8,7 @@ import HistorySvg from "@/assets/HistorySvg"
 
 export function SidebarClosed() {
 	return (
-		<aside className='flex h-screen w-16 flex-col items-center overflow-y-auto  bg-white py-8 fixed mt-12 ml-1'>
+		<aside className='flex h-screen w-16 flex-col items-center overflow-y-auto  bg-white py-8 fixed mt-12'>
 			<nav className='flex flex-1 flex-col items-center space-y-6'>
 				<a
 					href='#'
