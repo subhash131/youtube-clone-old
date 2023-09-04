@@ -26,7 +26,7 @@ type AppContextType = {
 	isUploadVideoSelected: boolean
 	setIsUploadVideoSelected: Dispatch<React.SetStateAction<boolean>>
 	wallet: MetaMaskWallet | undefined
-	updloadVideo: (video: File) => unknown
+	updloadVideo: (video: File, title: string) => unknown
 	signIn: () => Promise<void>
 	getAllVideos: () => Promise<void>
 	setAllVideos: Dispatch<React.SetStateAction<Video[]>>
