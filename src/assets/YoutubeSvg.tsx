@@ -6,6 +6,7 @@ const YoutubeSvg = () => {
 			className='pointer-events-none w-96 h-full block'
 			viewBox='0 0 280 20'
 			focusable='false'
+			width='24rem'
 		>
 			<svg
 				viewBox='0 0 280 20'

@@ -11,7 +11,7 @@ export function SidebarClosed() {
 		<aside className='flex h-screen w-16 flex-col items-center overflow-y-auto  bg-white py-8 fixed mt-12'>
 			<nav className='flex flex-1 flex-col items-center space-y-6'>
 				<a
-					href='#'
+					href='/'
 					className='rounded-lg p-1.5 text-gray-700 transition-colors duration-200 hover:bg-gray-100 focus:outline-none'
 				>
 					<HomeSvg isSelected={false} />

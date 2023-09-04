@@ -5,7 +5,6 @@ import Card from "@/components/Card"
 import { AppContext } from "@/providers"
 import SideBar from "@/components/sidebar"
 import Link from "next/link"
-import { Video } from "@/typescript.types/video"
 
 export default function Home() {
 	const {
@@ -17,11 +16,13 @@ export default function Home() {
 		setIsCreateSelected,
 		setIsSettingsOpen,
 		getAllVideos,
+		signIn,
 		reload,
 	} = React.useContext(AppContext)
 	useEffect(() => {
 		setIsNavBarOpen(true)
 		;(async () => {
+			signIn()
 			await getAllVideos()
 		})()
 	}, [reload])

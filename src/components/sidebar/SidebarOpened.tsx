@@ -12,7 +12,7 @@ export function SidebarOpened() {
 					<div className='space-y-3 '>
 						<a
 							className='flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700'
-							href='#'
+							href='/'
 						>
 							<HomeSvg isSelected={false} />
 							<span className='mx-2 text-sm font-medium'>

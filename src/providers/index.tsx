@@ -68,6 +68,7 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 		useState<boolean>(false)
 	const [isCreateSelected, setIsCreateSelected] = useState<boolean>(false)
 	const [allVideos, setAllVideos] = useState<Video[]>([])
+
 	const signIn = async (): Promise<void> => {
 		await wallet.connect()
 		const signer = await wallet.getSigner()
@@ -89,10 +90,7 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 		})
 		try {
 			const ipfsUrl = await storage.upload(file)
-			console.log("Uploaded to IPFS:", {
-				publicUrl: storage?.resolveScheme(ipfsUrl),
-				ipfsUrl,
-			})
+
 			return {
 				publicUrl: storage?.resolveScheme(ipfsUrl),
 				ipfsUrl,
@@ -102,7 +100,7 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 		}
 	}
 
-	const updloadVideo = async (video: File) => {
+	const updloadVideo = async (video: File, title: string) => {
 		const ipfsDetails = await uploadToIpfs(video)
 		if (ipfsDetails) {
 			const { publicUrl } = ipfsDetails
@@ -120,7 +118,10 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 				}
 			}
 			try {
-				const data = await contract?.call("uploadVideo", [publicUrl])
+				const data = await contract?.call("uploadVideo", [
+					publicUrl,
+					title,
+				])
 				if (data) {
 					toast.success("Video Uploaded")
 					setIsUploadVideoSelected(false)

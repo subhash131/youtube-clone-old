@@ -7,14 +7,19 @@ contract YouTube {
     struct Video {
         address myAddress;
         string videoUrl;
+        string title;
         uint256 likes;
         uint256 timeStamp;
     }
 
-    mapping(uint256 => Video) videos;
+    mapping(uint256 => Video) public videos;
 
-    function uploadVideo(string memory _videoUrl) external {
+    function uploadVideo(
+        string memory _videoUrl,
+        string memory _title
+    ) external {
         videos[videoCount].videoUrl = _videoUrl;
+        videos[videoCount].title = _title;
         videos[videoCount].myAddress = msg.sender;
         videos[videoCount].timeStamp = block.timestamp;
         videoCount++;
@@ -30,9 +35,5 @@ contract YouTube {
             allVideos[i] = videos[i];
         }
         return allVideos;
-    }
-
-    function getVideoByIndex(uint256 index) public view returns (Video memory) {
-        return videos[index];
     }
 }

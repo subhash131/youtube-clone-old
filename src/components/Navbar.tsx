@@ -36,10 +36,10 @@ export function Navbar() {
 					/>
 					<YoutubeSvg />
 				</div>
-				<div className=' w-[800px] flex gap-4 bg-[rd]'>
-					<div className='flex'>
+				<div className=' w-[800px] flex gap-4 '>
+					<div className='flex w-[80%] min-w-[150px]'>
 						<input
-							className='flex h-10 w-[500px] rounded-tl-3xl rounded-bl-3xl border border-[#E1E1E0] px-3 py-2 text-sm placeholder:text-[#A78F89] focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50'
+							className='flex h-10 w-full rounded-tl-3xl rounded-bl-3xl border border-[#E1E1E0] px-3 py-2 text-sm placeholder:text-[#A78F89] focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50'
 							type='text'
 							placeholder='Search'
 						></input>

@@ -7,6 +7,7 @@ import toast from "react-hot-toast"
 
 const UploadVideo = () => {
 	const [video, setVideo] = useState<File | undefined>(undefined)
+	const [title, setTitle] = useState<string>("")
 	const { isUploadVideoSelected, setIsUploadVideoSelected, updloadVideo } =
 		useContext(AppContext)
 	const [isTransactionLoading, setIsTransactionLoading] =
@@ -18,7 +19,7 @@ const UploadVideo = () => {
 		<>
 			<Overlay display={isUploadVideoSelected} />
 			<div
-				className={`w-2/3 h-4/5 top-20 left-60 bg-white border  absolute  rounded-lg z-10 overflow-hidden shadow-md ${
+				className={`w-2/3 h-4/5 top-20 left-60 bg-white border  absolute  rounded-lg z-[1000000] overflow-hidden shadow-md ${
 					isUploadVideoSelected ? "" : "hidden"
 				}`}
 			>
@@ -59,6 +60,10 @@ const UploadVideo = () => {
 										placeholder='title..'
 										className='border rounded-lg p-2'
 										ref={titleRef}
+										value={title}
+										onChange={(e) => {
+											setTitle(e.target.value)
+										}}
 									/>
 									<span className='text-sm text-[#959594]'>
 										Your videos will be private until you
@@ -87,7 +92,7 @@ const UploadVideo = () => {
 									}
 									if (video) {
 										setIsTransactionLoading(true)
-										await updloadVideo(video)
+										await updloadVideo(video, title)
 										setIsTransactionLoading(false)
 									}
 								}}

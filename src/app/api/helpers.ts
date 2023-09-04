@@ -1,5 +1,5 @@
 import { ThirdwebSDK } from "@thirdweb-dev/sdk"
-const contractAddress = "0xc48734Fb1c1320c5dbCAF5Bbb8141c7B573eDE60"
+const contractAddress = "0xA8449669E1757ADBAEd628BF5faef6A9E210FEAa"
 export const secretKey =
 	"wKPWk4Yc1M7UwtYajuPyaKjX71MT0HRmjgB9F24HM5_IACOAmk1wnb-Qn_F7s_FfRn1iJD1GrV3ynChLMTePRw"
 
