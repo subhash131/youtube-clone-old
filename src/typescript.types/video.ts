@@ -4,4 +4,5 @@ export type Video = {
 	title: string
 	likes: string
 	createdAt: string
+	index?: number
 }

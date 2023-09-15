@@ -13,7 +13,7 @@ const SideVideoCard = ({
 			<video
 				src={videoUrl}
 				width='200px'
-				className='rounded-lg'
+				className='rounded-lg object-cover h-[120px]'
 				onMouseOver={(e) => (e.target as HTMLVideoElement).play()}
 				onMouseOut={(e) => (e.target as HTMLVideoElement).pause()}
 				muted

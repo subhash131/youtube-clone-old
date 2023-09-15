@@ -11,7 +11,14 @@ import { Video } from "@/typescript.types/video"
 import React, { useEffect, useRef, useState } from "react"
 import VideoDetails from "./VideoDetails"
 
-const VideoPlayer = ({ videoUrl, address, title, likes, createdAt }: Video) => {
+const VideoPlayer = ({
+	videoUrl,
+	address,
+	title,
+	likes,
+	createdAt,
+	index,
+}: Video) => {
 	const theraterMode = "max-w-[initial] w-full max-h-[90vh]"
 	// const miniPlayer = "max-w-[initial] w-full max-h-[80vh] "
 	const [isFullScreen, setisFullScreen] = useState<boolean>(false)
@@ -147,7 +154,7 @@ const VideoPlayer = ({ videoUrl, address, title, likes, createdAt }: Video) => {
 
 		const isScrubbing = (e.buttons & 1) === 1
 		if (isScrubbing) {
-			(e.target as HTMLDivElement).style.setProperty(
+			;(e.target as HTMLDivElement).style.setProperty(
 				"--progress-position",
 				percent.toString()
 			)
@@ -316,7 +323,9 @@ const VideoPlayer = ({ videoUrl, address, title, likes, createdAt }: Video) => {
 				</div>
 				<video
 					src={videoUrl}
-					className={`${isFullScreen ? "" : "max-h-[80vh]"} w-full`}
+					className={`${
+						isFullScreen ? "h-80vh" : "max-h-[80vh]"
+					} w-full`}
 					ref={videoRef}
 					onClick={togglePlay}
 					onLoadedData={(e) => {
@@ -357,6 +366,7 @@ const VideoPlayer = ({ videoUrl, address, title, likes, createdAt }: Video) => {
 				title={title}
 				likes={likes}
 				createdAt={createdAt}
+				index={index}
 			/>
 		</>
 	)

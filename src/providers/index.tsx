@@ -5,6 +5,7 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk"
 import toast from "react-hot-toast"
 import { contractAddress, clientId } from "@/constants"
 import { ThirdwebStorage } from "@thirdweb-dev/storage"
+import { ethers } from "ethers"
 
 type Video = {
 	videoUrl: string
@@ -33,6 +34,7 @@ type AppContextType = {
 	allVideos: Video[]
 	reload: boolean
 	setReload: Dispatch<React.SetStateAction<boolean>>
+	likeVideo: (index: number) => Promise<void>
 }
 
 export const AppContext = React.createContext<AppContextType>({
@@ -54,6 +56,7 @@ export const AppContext = React.createContext<AppContextType>({
 	allVideos: [],
 	setReload: () => {},
 	reload: false,
+	likeVideo: () => new Promise<void>(() => {}),
 })
 
 const AppContextProvider = ({ children }: PropsWithChildren) => {
@@ -141,9 +144,24 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 			const data = await fetch(url)
 			const jsonData = await data.json()
 			setAllVideos(jsonData.data)
+			setReload(true)
 			return jsonData.data
 		} catch (e) {
 			console.log(e)
+		}
+		return []
+	}
+	const likeVideo = async (index: number) => {
+		const contract = await getContract()
+		if (contract) {
+			const ind = ethers.BigNumber.from(
+				(allVideos.length - index - 1).toString()
+			)
+
+			await contract.call("like", [ind])
+			setReload((preval) => !preval)
+		} else {
+			toast.error("Please connect your wallet")
 		}
 	}
 
@@ -154,6 +172,7 @@ const AppContextProvider = ({ children }: PropsWithChildren) => {
 				signIn,
 				reload,
 				setReload,
+				likeVideo,
 				allVideos,
 				isLoggedIn,
 				isNavBarOpen,

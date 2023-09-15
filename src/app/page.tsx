@@ -1,12 +1,14 @@
 "use client"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 import Card from "@/components/Card"
 import { AppContext } from "@/providers"
 import SideBar from "@/components/sidebar"
 import Link from "next/link"
+import { Video } from "@/typescript.types/video"
 
 export default function Home() {
+	const [videoList, setVideoList] = useState<Video[]>([])
 	const {
 		allVideos,
 		isNavBarOpen,
@@ -24,6 +26,7 @@ export default function Home() {
 		;(async () => {
 			signIn()
 			await getAllVideos()
+			setVideoList([...allVideos])
 		})()
 	}, [reload])
 
@@ -49,14 +52,14 @@ export default function Home() {
 									: "grid-cols-[repeat(auto-fill,minmax(18rem,1fr))]"
 							}  gap-8 overflow-hidden`}
 						>
-							{allVideos ? (
-								[...allVideos].map((video, index) => {
+							{videoList ? (
+								[...videoList].map((video, index) => {
 									return (
 										<Link
 											key={index}
 											href={{
 												pathname: `/${index}`,
-												query: video,
+												query: { ...video, index },
 											}}
 										>
 											<Card
@@ -71,7 +74,7 @@ export default function Home() {
 									)
 								})
 							) : (
-								<>loading...</>
+								<div>loading...</div>
 							)}
 						</div>
 					</div>
