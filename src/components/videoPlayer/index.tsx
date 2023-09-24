@@ -154,7 +154,7 @@ const VideoPlayer = ({
 
 		const isScrubbing = (e.buttons & 1) === 1
 		if (isScrubbing) {
-			;(e.target as HTMLDivElement).style.setProperty(
+			(e.target as HTMLDivElement).style.setProperty(
 				"--progress-position",
 				percent.toString()
 			)
@@ -366,7 +366,7 @@ const VideoPlayer = ({
 				title={title}
 				likes={likes}
 				createdAt={createdAt}
-				index={index}
+				index={index!}
 			/>
 		</>
 	)
