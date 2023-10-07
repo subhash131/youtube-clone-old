@@ -154,7 +154,7 @@ const VideoPlayer = ({
 
 		const isScrubbing = (e.buttons & 1) === 1
 		if (isScrubbing) {
-			(e.target as HTMLDivElement).style.setProperty(
+			(timeLineRef.current as HTMLDivElement).style.setProperty(
 				"--progress-position",
 				percent.toString()
 			)
@@ -196,7 +196,7 @@ const VideoPlayer = ({
 									Math.max(0, e.clientX - rect.x),
 									rect.width
 								) / rect.width
-							;(e.target as HTMLDivElement).style.setProperty(
+							;(timeLineRef.current as HTMLDivElement).style.setProperty(
 								"--progress-position",
 								percent.toString()
 							)
